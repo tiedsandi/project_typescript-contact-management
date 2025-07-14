@@ -1,31 +1,25 @@
-import type { RegisterForm } from "./types";
+import { z } from "zod";
 
-export function validateRegister(data: RegisterForm) {
-  const errors: Partial<Record<keyof RegisterForm, string>> = {};
+export const registerSchema = z
+  .object({
+    username: z
+      .string()
+      .min(1, "Username is required")
+      .refine((val) => val !== "admin", {
+        message: "Username is already used",
+      }),
+    name: z.string().min(1, "Full name is required"),
+    password: z
+      .string()
+      .min(6, "Minimum 6 characters")
+      .regex(/[a-z]/, "At least 1 lowercase letter")
+      .regex(/[A-Z]/, "At least 1 uppercase letter")
+      .regex(/[\W_]/, "At least 1 symbol (!@#$)"),
+    confirm_password: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    path: ["confirm_password"],
+    message: "Passwords do not match",
+  });
 
-  if (!data.username) errors.username = "Username is required";
-  else if (data.username === "admin")
-    errors.username = "Username is already used";
-
-  if (!data.name) errors.name = "Full name is required";
-
-  if (!data.password) {
-    errors.password = "Password is required";
-  } else {
-    if (data.password.length < 6) errors.password = "Minimum 6 characters";
-    else if (!/[a-z]/.test(data.password))
-      errors.password = "At least 1 lowercase letter";
-    else if (!/[A-Z]/.test(data.password))
-      errors.password = "At least 1 uppercase letter";
-    else if (!/[\W_]/.test(data.password))
-      errors.password = "At least 1 symbol (!@#$)";
-  }
-
-  if (!data.confirm_password) {
-    errors.confirm_password = "Please confirm your password";
-  } else if (data.password !== data.confirm_password) {
-    errors.confirm_password = "Passwords do not match";
-  }
-
-  return errors;
-}
+export type RegisterForm = z.infer<typeof registerSchema>;

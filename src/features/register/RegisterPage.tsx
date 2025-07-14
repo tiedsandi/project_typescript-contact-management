@@ -1,19 +1,14 @@
 import { Form, Link, useActionData } from "react-router";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import Button from "@/components/UI/Button.component";
 import Input from "@/components/UI/Input.component";
-import type { RegisterForm } from "@/features/register/types";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-
-function validatePassword(password: string) {
-  return {
-    length: password.length >= 6,
-    uppercase: /[A-Z]/.test(password),
-    lowercase: /[a-z]/.test(password),
-    symbol: /[\W_]/.test(password),
-  };
-}
+import {
+  registerSchema,
+  type RegisterForm,
+} from "@/features/register/validation";
 
 export default function RegisterPage() {
   const actionData = useActionData() as {
@@ -28,16 +23,21 @@ export default function RegisterPage() {
     trigger,
     formState: { errors, touchedFields },
   } = useForm<RegisterForm>({
+    resolver: zodResolver(registerSchema),
     defaultValues: actionData?.values || {},
     mode: "onChange",
   });
 
   const password = watch("password") || "";
-  // const confirmPassword = watch("confirm_password") || "";
-
-  const passwordStatus = validatePassword(password);
   const passwordTouched = touchedFields.password;
   const confirmTouched = touchedFields.confirm_password;
+
+  const passwordStatus = {
+    length: password.length >= 6,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    symbol: /[\W_]/.test(password),
+  };
 
   useEffect(() => {
     if (actionData?.errors) {
@@ -71,9 +71,7 @@ export default function RegisterPage() {
 
       <Form method="post">
         <Input
-          {...register("username", {
-            required: "Username is required",
-          })}
+          {...register("username")}
           name="username"
           label="Username"
           placeholder="Choose a username"
@@ -82,9 +80,7 @@ export default function RegisterPage() {
         />
 
         <Input
-          {...register("name", {
-            required: "Full name is required",
-          })}
+          {...register("name")}
           name="name"
           label="Full Name"
           placeholder="Enter your full name"
@@ -93,18 +89,7 @@ export default function RegisterPage() {
         />
 
         <Input
-          {...register("password", {
-            required: "Password is required",
-            validate: (value) => {
-              const { length, lowercase, uppercase, symbol } =
-                validatePassword(value);
-              if (!length) return "Minimum 6 characters";
-              if (!lowercase) return "At least 1 lowercase letter";
-              if (!uppercase) return "At least 1 uppercase letter";
-              if (!symbol) return "At least 1 symbol (!@#$)";
-              return true;
-            },
-          })}
+          {...register("password")}
           name="password"
           label="Password"
           placeholder="Create a password"
@@ -147,13 +132,7 @@ export default function RegisterPage() {
         )}
 
         <Input
-          {...register("confirm_password", {
-            validate: (value) => {
-              if (!value) return "Please confirm your password";
-              if (value !== password) return "Passwords do not match";
-              return true;
-            },
-          })}
+          {...register("confirm_password")}
           name="confirm_password"
           label="Confirm Password"
           placeholder="Confirm your password"
