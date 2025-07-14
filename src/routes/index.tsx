@@ -5,6 +5,7 @@ import AuthLayout from "@/components/layouts/AuthLayout";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { DashboardPage } from "@/features/dashboard";
 import { HomePage } from "@/features/home";
+import ProtectedRoute from "@/middleware/ProtectedRoute";
 import { createBrowserRouter } from "react-router";
 
 const Router = createBrowserRouter([
@@ -30,7 +31,11 @@ const Router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
     children: [
       { index: true, element: <DashboardPage /> },
       // { path: "/profile", element: <DashboardPage /> },
