@@ -24,3 +24,24 @@ export async function registerUser({
 
   return data;
 }
+
+export async function loginUser({
+  username,
+  password,
+}: {
+  username: string;
+  password: string;
+}) {
+  const res = await fetch(`${API_BASE_URL}${ENDPOINTS.login}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.errors || "Failed to login");
+
+  return data;
+}

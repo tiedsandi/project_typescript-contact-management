@@ -1,3 +1,4 @@
+import { LoginPage, loginAction } from "@/features/login";
 import { RegisterPage, registerAction } from "@/features/register";
 
 import AuthLayout from "@/components/layouts/AuthLayout";
@@ -20,7 +21,8 @@ const Router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <h1>Logiin</h1>,
+        element: <LoginPage />,
+        action: loginAction,
       },
     ],
   },
