@@ -28,8 +28,10 @@ export async function action({ request }: ActionFunctionArgs) {
       username,
       password,
     });
+    console.log(res);
 
-    localStorage.setItem("token", res.token);
+    localStorage.setItem("token", res.data.token);
+
     return redirect(`/dashboard`);
   } catch (error) {
     return {

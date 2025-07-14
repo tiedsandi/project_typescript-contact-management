@@ -12,7 +12,8 @@ export default function ProtectedRoute({
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+
+    if (!token || token === undefined) {
       setTimeout(function () {
         navigate("/login", { replace: true });
       }, 2000);
