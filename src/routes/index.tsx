@@ -1,6 +1,7 @@
+import { RegisterPage, registerAction } from "@/features/register";
+
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { HomePage } from "@/features/home";
-import RegisterPage from "@/features/register/RegisterPage";
 import { createBrowserRouter } from "react-router";
 
 const Router = createBrowserRouter([
@@ -15,6 +16,7 @@ const Router = createBrowserRouter([
       {
         path: "/register",
         element: <RegisterPage />,
+        action: registerAction,
       },
       {
         path: "/login",
