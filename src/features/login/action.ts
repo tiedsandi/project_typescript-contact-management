@@ -28,7 +28,9 @@ export async function action({ request }: ActionFunctionArgs) {
       username,
       password,
     });
-    return redirect(`/dashboard?token=${res.data.token}`);
+
+    localStorage.setItem("token", res.token);
+    return redirect(`/dashboard`);
   } catch (error) {
     return {
       errors: {

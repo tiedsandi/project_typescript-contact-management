@@ -1,18 +1,6 @@
 import { Link, Outlet, useNavigate } from "react-router";
 
-import { useEffect } from "react";
-
 export default function DashboardLayout() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token = new URLSearchParams(location.search).get("token");
-    if (token) {
-      localStorage.setItem("token", token);
-      navigate("/dashboard", { replace: true });
-      console.log(token);
-    }
-  }, [navigate]);
-
   return (
     <>
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex flex-col">
@@ -59,7 +47,7 @@ function Navigation() {
       <ul className="flex space-x-6">
         <li>
           <Link
-            to="/dashboard/users/profile"
+            to="/dashboard/profile"
             className="text-gray-100 hover:text-white flex items-center transition-colors duration-200"
           >
             <i className="fas fa-user-circle mr-2"></i>
