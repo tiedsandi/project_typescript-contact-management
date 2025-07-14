@@ -1,4 +1,5 @@
 import { LoginPage, loginAction } from "@/features/login";
+import { ProfilePage, profileAction, profileLoader } from "@/features/profile";
 import { RegisterPage, registerAction } from "@/features/register";
 
 import AuthLayout from "@/components/layouts/AuthLayout";
@@ -18,12 +19,12 @@ const Router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/register",
+        path: "register",
         element: <RegisterPage />,
         action: registerAction,
       },
       {
-        path: "/login",
+        path: "login",
         element: <LoginPage />,
         action: loginAction,
       },
@@ -38,7 +39,12 @@ const Router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <DashboardPage /> },
-      // { path: "/profile", element: <DashboardPage /> },
+      {
+        path: "profile",
+        element: <ProfilePage />,
+        action: profileAction,
+        loader: profileLoader,
+      },
     ],
   },
 ]);
