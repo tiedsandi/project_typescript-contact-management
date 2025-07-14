@@ -1,15 +1,14 @@
 import { redirect, type ActionFunctionArgs } from "react-router";
 import { registerSchema } from "./validation";
+import { registerUser } from "@/lib/api"; // <- pastikan path-nya sesuai
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData) as Record<string, string>;
 
   const parseResult = registerSchema.safeParse(data);
-
   if (!parseResult.success) {
     const zodErrors = parseResult.error.flatten().fieldErrors;
-
     const errors: Record<string, string> = {};
     Object.entries(zodErrors).forEach(([field, messages]) => {
       if (messages?.[0]) errors[field] = messages[0];
@@ -18,6 +17,20 @@ export async function action({ request }: ActionFunctionArgs) {
     return { errors, values: data };
   }
 
-  // Data valid
-  return redirect("/");
+  try {
+    await registerUser({
+      username: data.username,
+      password: data.password,
+      name: data.name,
+    });
+
+    return redirect("/login");
+  } catch (error) {
+    return {
+      errors: {
+        username: error instanceof Error ? error.message : "Unknown error",
+      },
+      values: data,
+    };
+  }
 }

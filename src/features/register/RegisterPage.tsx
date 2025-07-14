@@ -2,6 +2,7 @@ import { Form, Link, useActionData } from "react-router";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigation } from "react-router";
 
 import Button from "@/components/UI/Button.component";
 import Input from "@/components/UI/Input.component";
@@ -11,6 +12,9 @@ import {
 } from "@/features/register/validation";
 
 export default function RegisterPage() {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
+
   const actionData = useActionData() as {
     errors?: Partial<Record<keyof RegisterForm, string>>;
     values?: Partial<RegisterForm>;
@@ -142,8 +146,21 @@ export default function RegisterPage() {
         />
 
         <div className="mb-6">
-          <Button type="submit" variant="primary" className="w-full">
-            <i className="fas fa-user-plus mr-2"></i> Register
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <i className="fas fa-spinner fa-spin mr-2" /> Registering...
+              </>
+            ) : (
+              <>
+                <i className="fas fa-user-plus mr-2" /> Register
+              </>
+            )}
           </Button>
         </div>
 
