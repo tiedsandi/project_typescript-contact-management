@@ -28,9 +28,12 @@ export async function action({ request }: ActionFunctionArgs) {
       username,
       password,
     });
-    console.log(res);
+
+    const expiresIn = 24 * 60 * 60 * 1000; // 24 jam dalam ms
+    const expiryTime = Date.now() + expiresIn;
 
     localStorage.setItem("token", res.data.token);
+    localStorage.setItem("token_expiry", expiryTime.toString());
 
     return redirect(`/dashboard`);
   } catch (error) {

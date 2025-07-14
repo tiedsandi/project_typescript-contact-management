@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { getValidToken } from "@/utils/valid-token";
 import { useNavigate } from "react-router";
 
 export default function ProtectedRoute({
@@ -11,9 +12,9 @@ export default function ProtectedRoute({
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getValidToken();
 
-    if (!token || token === undefined) {
+    if (!token) {
       setTimeout(function () {
         navigate("/login", { replace: true });
       }, 2000);
