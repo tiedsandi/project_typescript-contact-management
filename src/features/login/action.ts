@@ -28,7 +28,7 @@ export async function action({ request }: ActionFunctionArgs) {
       username,
       password,
     });
-    return redirect(`/?token=${res.data.token}`);
+    return redirect(`/dashboard?token=${res.data.token}`);
   } catch (error) {
     return {
       errors: {
