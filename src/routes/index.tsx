@@ -1,11 +1,12 @@
 import { LoginPage, loginAction } from "@/features/login";
-import { ProfilePage, profileAction, profileLoader } from "@/features/profile";
+import { ProfilePage, profileLoader } from "@/features/profile";
 import { RegisterPage, registerAction } from "@/features/register";
 
 import AuthLayout from "@/components/layouts/AuthLayout";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { DashboardPage } from "@/features/dashboard";
 import { HomePage } from "@/features/home";
+import LoadingScreen from "@/components/LoadingScreen";
 import ProtectedRoute from "@/middleware/ProtectedRoute";
 import { createBrowserRouter } from "react-router";
 
@@ -42,8 +43,8 @@ const Router = createBrowserRouter([
       {
         path: "profile",
         element: <ProfilePage />,
-        action: profileAction,
         loader: profileLoader,
+        HydrateFallback: LoadingScreen,
       },
     ],
   },

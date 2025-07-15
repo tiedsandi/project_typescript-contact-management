@@ -39,6 +39,7 @@ function Navigation() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("token_expiry");
     navigate("/login");
   };
 

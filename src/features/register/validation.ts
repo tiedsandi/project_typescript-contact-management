@@ -2,12 +2,10 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
-    username: z
-      .string()
-      .min(1, "Username is required")
-      .refine((val) => val !== "admin", {
-        message: "Username is already used",
-      }),
+    username: z.string().min(1, "Username is required"),
+    // .refine((val) => val !== "admin", {
+    //   message: "Username is already used",
+    // }),
     name: z.string().min(1, "Full name is required"),
     password: z
       .string()
