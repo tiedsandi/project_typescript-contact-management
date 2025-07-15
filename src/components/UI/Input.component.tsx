@@ -5,18 +5,31 @@ import {
   type ReactNode,
 } from "react";
 
+import clsx from "clsx";
+
 type InputProps = {
   label?: string;
   icon?: ReactNode;
   type?: "text" | "number" | "password" | "email";
   name?: string;
+  disabled?: boolean;
   placeholder?: string;
   error?: string;
 } & ComponentPropsWithoutRef<"input">;
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
-    { label, icon, name, type = "text", placeholder, required, error, ...rest },
+    {
+      label,
+      icon,
+      name,
+      type = "text",
+      placeholder,
+      required,
+      disabled,
+      error,
+      ...rest
+    },
     ref
   ) => {
     const id = rest.id ?? name;
@@ -49,14 +62,20 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             type={isPassword ? (showPassword ? "text" : "password") : type}
             placeholder={placeholder}
             required={required}
+            disabled={disabled}
             {...rest}
-            className={`w-full ${icon ? "pl-10" : "pl-3"} ${
-              isPassword ? "pr-10" : "pr-3"
-            } py-3 bg-gray-700 bg-opacity-50 border ${
-              error ? "border-red-500" : "border-gray-600"
-            } text-white rounded-lg focus:outline-none focus:ring-2 ${
-              error ? "focus:ring-red-500" : "focus:ring-blue-500"
-            } transition-all duration-200`}
+            className={clsx(
+              "w-full",
+              icon ? "pl-10" : "pl-3",
+              isPassword ? "pr-10" : "pr-3",
+              "py-3 bg-gray-700 bg-opacity-50 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200",
+              {
+                "border-red-500 focus:ring-red-500": error,
+                "border-gray-600 focus:ring-blue-500": !error,
+                "text-gray-400 cursor-not-allowed ": disabled,
+                "text-white": !disabled,
+              }
+            )}
           />
 
           {/* toggle show */}
