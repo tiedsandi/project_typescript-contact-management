@@ -1,3 +1,4 @@
 import DashboardPage from "./DashboardPage";
+import { loader as dashboarLoader } from "./loader";
 
-export { DashboardPage };
+export { DashboardPage, dashboarLoader };
