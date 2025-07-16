@@ -2,6 +2,9 @@ import type { Contact, FilterValues } from "./types";
 import { Link, useLoaderData } from "react-router";
 import { useEffect, useState } from "react";
 
+import Button from "@/components/UI/Button.component";
+import ContactCardWrapper from "./components/ContactCardWrapper";
+import ContactInfoItem from "./components/ContactInfoItem";
 import Filter from "./components/Filter";
 import LoadingScreen from "@/components/LoadingScreen";
 import { searchContacts } from "@/lib/api-contact";
@@ -15,11 +18,11 @@ export default function DashboardPage() {
   });
   const [page, setPage] = useState(1);
   const [contacts, setContacts] = useState<Contact[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchContacts = async () => {
-      setIsLoading(true);
+      // setIsLoading(true);
       try {
         const result = await searchContacts(token, {
           page,
@@ -52,7 +55,7 @@ export default function DashboardPage() {
         </LoadingScreen>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom overflow-hidden border-2 border-dashed border-gray-700 card-hover animate-fade-in">
+          <ContactCardWrapper className="border-2 border-dashed">
             <Link to="/dashboard/contacts/create" className="block p-6 h-full">
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <div className="w-20 h-20 bg-gradient rounded-full flex items-center justify-center mb-5 shadow-lg transform transition-transform duration-300 hover:scale-110">
@@ -64,14 +67,12 @@ export default function DashboardPage() {
                 <p className="text-gray-300">Add a new contact to your list</p>
               </div>
             </Link>
-          </div>
+          </ContactCardWrapper>
+
           {Array.isArray(contacts) &&
             contacts.length > 0 &&
             contacts.map((contact) => (
-              <div
-                key={contact.id}
-                className="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in"
-              >
+              <ContactCardWrapper key={contact.id}>
                 <div className="p-6">
                   <Link
                     to={`/dashboard/contacts/${contact.id}`}
@@ -86,47 +87,46 @@ export default function DashboardPage() {
                       </h2>
                     </div>
                     <div className="space-y-3 text-gray-300 ml-2">
-                      <p className="flex items-center">
-                        <i className="fas fa-user-tag text-gray-500 w-6"></i>
-                        <span className="font-medium w-24">First Name:</span>
-                        <span>{contact.first_name}</span>
-                      </p>
-                      <p className="flex items-center">
-                        <i className="fas fa-user-tag text-gray-500 w-6"></i>
-                        <span className="font-medium w-24">Last Name:</span>
-                        <span>{contact.last_name}</span>
-                      </p>
-                      <p className="flex items-center">
-                        <i className="fas fa-envelope text-gray-500 w-6"></i>
-                        <span className="font-medium w-24">Email:</span>
-                        <span>{contact.email}</span>
-                      </p>
-                      <p className="flex items-center">
-                        <i className="fas fa-phone text-gray-500 w-6"></i>
-                        <span className="font-medium w-24">Phone:</span>
-                        <span>{contact.phone}</span>
-                      </p>
+                      <ContactInfoItem
+                        icon="fas fa-user-tag"
+                        label="First Name"
+                        value={contact.first_name}
+                      />
+                      <ContactInfoItem
+                        icon="fas fa-user-tag"
+                        label="Last Name"
+                        value={contact.last_name}
+                      />
+                      <ContactInfoItem
+                        icon="fas fa-envelope"
+                        label="Email"
+                        value={contact.email}
+                      />
+                      <ContactInfoItem
+                        icon="fas fa-phone"
+                        label="Phone"
+                        value={contact.phone}
+                      />
                     </div>
                   </Link>
                   <div className="mt-4 flex justify-end space-x-3">
-                    <Link
-                      to={`/dashboard/contacts/${contact.id}/edit`}
-                      className="px-4 py-2 bg-gradient text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center"
-                    >
+                    <Button to={`/dashboard/contacts/${contact.id}/edit`}>
                       <i className="fas fa-edit mr-2"></i> Edit
-                    </Link>
-                    <button
+                    </Button>
+
+                    <Button
                       // onClick={() => handleContactDelete(contact.id)}
-                      className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center"
+                      variant="danger"
                     >
                       <i className="fas fa-trash-alt mr-2"></i> Delete
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              </div>
+              </ContactCardWrapper>
             ))}
         </div>
       )}
+
       {/* <Pagination
         getPages={getPages}
         handlePageChange={handlePageChange}
