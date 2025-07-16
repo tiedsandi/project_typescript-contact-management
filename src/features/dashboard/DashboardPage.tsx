@@ -1,13 +1,13 @@
 import type { Contact, FilterValues } from "./types";
-import { Link, redirect } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { useEffect, useState } from "react";
 
 import Filter from "./components/Filter";
 import LoadingScreen from "@/components/LoadingScreen";
-import { getValidToken } from "@/utils/valid-token";
 import { searchContacts } from "@/lib/api-contact";
 
 export default function DashboardPage() {
+  const { token } = useLoaderData() as { token: string };
   const [filters, setFilters] = useState<FilterValues>({
     name: "",
     email: "",
@@ -21,9 +21,6 @@ export default function DashboardPage() {
     const fetchContacts = async () => {
       setIsLoading(true);
       try {
-        const token = getValidToken();
-        if (!token) throw redirect("/login");
-
         const result = await searchContacts(token, {
           page,
           ...filters,
@@ -39,7 +36,7 @@ export default function DashboardPage() {
     };
 
     fetchContacts();
-  }, [filters, page]);
+  }, [filters, page, token]);
 
   return (
     <>
