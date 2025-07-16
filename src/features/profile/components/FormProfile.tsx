@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { profileSchema, type ProfileForm } from "../schema/profileSchema";
 import { getValidToken } from "@/utils/valid-token";
-import { updateUser } from "@/lib/api";
+import { updateUser } from "@/lib/api-user";
 import { redirect } from "react-router";
 import { useState } from "react";
 

@@ -1,4 +1,4 @@
-import { getUser } from "@/lib/api";
+import { getUser } from "@/lib/api-user";
 import { getValidToken } from "@/utils/valid-token";
 import { redirect } from "react-router";
 

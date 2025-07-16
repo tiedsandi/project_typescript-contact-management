@@ -1,6 +1,4 @@
-import { ENDPOINTS } from "./enpoints";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { API_BASE_URL, ENDPOINTS } from "./enpoints";
 
 export async function registerUser({
   username,

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getValidToken } from "@/utils/valid-token";
 import { redirect } from "react-router";
-import { updateUser } from "@/lib/api";
+import { updateUser } from "@/lib/api-user";
 import { useEffect, useState } from "react";
 
 export default function FormPassword() {

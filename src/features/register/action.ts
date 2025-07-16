@@ -1,6 +1,6 @@
 import { redirect, type ActionFunctionArgs } from "react-router";
 import { registerSchema } from "./validation";
-import { registerUser } from "@/lib/api"; // <- pastikan path-nya sesuai
+import { registerUser } from "@/lib/api-user";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();

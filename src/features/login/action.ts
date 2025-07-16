@@ -1,5 +1,5 @@
 import { redirect, type ActionFunctionArgs } from "react-router";
-import { loginUser } from "@/lib/api";
+import { loginUser } from "@/lib/api-user";
 import z from "zod";
 
 const loginSchema = z.object({
