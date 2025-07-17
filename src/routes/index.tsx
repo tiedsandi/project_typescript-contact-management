@@ -1,6 +1,7 @@
 import {
   CreateContactPage,
   DashboardPage,
+  createContactAction,
   dashboardLoader,
 } from "@/features/dashboard";
 import { LoginPage, loginAction } from "@/features/login";
@@ -55,6 +56,8 @@ const Router = createBrowserRouter([
       {
         path: "contacts/create",
         element: <CreateContactPage />,
+        loader: dashboardLoader,
+        action: createContactAction,
         // HydrateFallback: LoadingScreen,
       },
     ],

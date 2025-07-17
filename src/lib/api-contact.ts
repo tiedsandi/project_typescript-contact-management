@@ -1,10 +1,11 @@
 import { API_BASE_URL, ENDPOINTS } from "./enpoints";
 
 import type { Contact } from "@/features/dashboard/types";
+import { getValidToken } from "@/utils/valid-token";
 
 type contactsForm = {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string;
 };
@@ -34,7 +35,7 @@ function getAuthHeaders(token: string): HeadersInit {
 }
 
 export async function createContact(token: string, params: contactsForm) {
-  const res = await fetch(`${API_BASE_URL}${ENDPOINTS.register}`, {
+  const res = await fetch(`${API_BASE_URL}${ENDPOINTS.contacts}`, {
     method: "POST",
     headers: getAuthHeaders(token),
     body: JSON.stringify(params),
@@ -117,4 +118,29 @@ export async function deleteContact(token: string, id: number) {
   }
 
   return { success: true };
+}
+
+export async function checkEmailTaken(email: string): Promise<boolean> {
+  const token = getValidToken();
+  if (!token) throw new Error("Unauthorized");
+
+  const res = await fetch(
+    `${API_BASE_URL}${
+      ENDPOINTS.contacts
+    }/check-email?email=${encodeURIComponent(email)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const errData = await res.json();
+    console.error("Email check failed:", errData);
+    throw new Error("Failed to check email availability");
+  }
+
+  const data = await res.json();
+  return !data.available;
 }

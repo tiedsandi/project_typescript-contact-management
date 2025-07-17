@@ -90,11 +90,14 @@ export default function DashboardPage() {
                         label="First Name"
                         value={contact.first_name}
                       />
-                      <ContactInfoItem
-                        icon="fas fa-user-tag"
-                        label="Last Name"
-                        value={contact.last_name}
-                      />
+                      {contact.last_name && (
+                        <ContactInfoItem
+                          icon="fas fa-user-tag"
+                          label="Last Name"
+                          value={contact.last_name}
+                        />
+                      )}
+
                       <ContactInfoItem
                         icon="fas fa-envelope"
                         label="Email"
