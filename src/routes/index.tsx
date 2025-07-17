@@ -1,4 +1,8 @@
-import { DashboardPage, dashboardLoader } from "@/features/dashboard";
+import {
+  CreateContactPage,
+  DashboardPage,
+  dashboardLoader,
+} from "@/features/dashboard";
 import { LoginPage, loginAction } from "@/features/login";
 import { ProfilePage, profileLoader } from "@/features/profile";
 import { RegisterPage, registerAction } from "@/features/register";
@@ -47,6 +51,11 @@ const Router = createBrowserRouter([
         element: <ProfilePage />,
         loader: profileLoader,
         HydrateFallback: LoadingScreen,
+      },
+      {
+        path: "contacts/create",
+        element: <CreateContactPage />,
+        // HydrateFallback: LoadingScreen,
       },
     ],
   },

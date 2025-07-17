@@ -1,4 +1,4 @@
-import FormCard from "./components/FormCard";
+import FormCard from "../../components/FormCard";
 import FormPassword from "./components/FormPassword";
 import FormProfile from "./components/FormProfile";
 import { useLoaderData } from "react-router";

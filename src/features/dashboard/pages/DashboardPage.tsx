@@ -1,11 +1,11 @@
-import type { Contact, FilterValues } from "./types";
+import type { Contact, FilterValues } from "../types";
 import { Link, useLoaderData } from "react-router";
 import { useEffect, useState } from "react";
 
 import Button from "@/components/UI/Button.component";
-import ContactCardWrapper from "./components/ContactCardWrapper";
-import ContactInfoItem from "./components/ContactInfoItem";
-import Filter from "./components/Filter";
+import ContactCardWrapper from "../components/ContactCardWrapper";
+import ContactInfoItem from "../components/ContactInfoItem";
+import Filter from "../components/Filter";
 import LoadingScreen from "@/components/LoadingScreen";
 import { searchContacts } from "@/lib/api-contact";
 
@@ -32,9 +32,7 @@ export default function DashboardPage() {
       } catch (error) {
         console.error("Error fetching contacts:", error);
       } finally {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 2000);
+        setIsLoading(false);
       }
     };
 

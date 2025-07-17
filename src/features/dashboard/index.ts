@@ -1,4 +1,5 @@
-import DashboardPage from "./DashboardPage";
-import { loader as dashboardLoader } from "./loader";
+import CreateContactPage from "./pages/CraeteContactPage";
+import DashboardPage from "./pages/DashboardPage";
+import { loader as dashboardLoader } from "./loaders/dashboardContactLoader";
 
-export { DashboardPage, dashboardLoader };
+export { DashboardPage, CreateContactPage, dashboardLoader };
