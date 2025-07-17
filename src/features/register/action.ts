@@ -24,7 +24,7 @@ export async function action({ request }: ActionFunctionArgs) {
       name: data.name,
     });
 
-    return redirect("/login");
+    return redirect("/login?msg=register-success");
   } catch (error) {
     return {
       errors: {

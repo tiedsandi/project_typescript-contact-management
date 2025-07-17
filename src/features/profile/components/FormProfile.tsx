@@ -7,6 +7,7 @@ import { getValidToken } from "@/utils/valid-token";
 import { updateUser } from "@/lib/api-user";
 import { redirect } from "react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type value = {
   name?: string;
@@ -34,8 +35,9 @@ export default function FormProfile(value: value) {
     setIsSubmitting(true);
     try {
       await updateUser({ token, name: data.full_name });
-    } catch (err) {
-      console.error("❌ Failed to update user:", err);
+      toast.success("Update profile successfully!");
+    } catch {
+      toast.error("Update profile failed!");
     } finally {
       setIsSubmitting(false);
     }

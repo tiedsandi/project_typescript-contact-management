@@ -1,5 +1,3 @@
-// action.ts
-
 import { type ActionFunctionArgs, redirect } from "react-router";
 import { createContact } from "@/lib/api-contact";
 import { getValidToken } from "@/utils/valid-token";
@@ -31,12 +29,11 @@ export async function action({ request }: ActionFunctionArgs) {
       phone: String(data.phone),
     });
 
-    return redirect("/dashboard");
+    return redirect("/dashboard?msg=contact-success");
   } catch (error) {
     return {
-      errors: {
-        email: error instanceof Error ? error.message : "Unknown error",
-      },
+      formError:
+        error instanceof Error ? error.message : "Something went wrong",
       values: data,
     };
   }

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactSchema, type ContactForm } from "../schema";
 import type z from "zod";
+import { toast } from "sonner";
 
 export default function FormCreateContact() {
   const navigation = useNavigation();
@@ -15,7 +16,14 @@ export default function FormCreateContact() {
   const actionData = useActionData() as {
     errors?: Partial<Record<keyof ContactForm, string>>;
     values?: Partial<ContactForm>;
+    formError?: string;
   };
+
+  useEffect(() => {
+    if (actionData?.formError) {
+      toast.error(actionData.formError);
+    }
+  }, [actionData?.formError]);
 
   const {
     register,

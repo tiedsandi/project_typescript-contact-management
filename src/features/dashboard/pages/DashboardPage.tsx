@@ -1,6 +1,11 @@
 import type { Contact, FilterValues } from "../types";
-import { Link, useLoaderData } from "react-router";
-import { useEffect, useState } from "react";
+import {
+  Link,
+  useLoaderData,
+  useNavigate,
+  useSearchParams,
+} from "react-router";
+import { useEffect, useRef, useState } from "react";
 
 import Button from "@/components/UI/Button.component";
 import ContactCardWrapper from "../components/ContactCardWrapper";
@@ -8,6 +13,7 @@ import ContactInfoItem from "../components/ContactInfoItem";
 import Filter from "../components/Filter";
 import LoadingScreen from "@/components/LoadingScreen";
 import { searchContacts } from "@/lib/api-contact";
+import { toast } from "sonner";
 
 export default function DashboardPage() {
   const { token } = useLoaderData() as { token: string };
@@ -19,6 +25,21 @@ export default function DashboardPage() {
   const [page, setPage] = useState(1);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const toastRef = useRef(false);
+
+  useEffect(() => {
+    const msg = searchParams.get("msg");
+
+    if (msg === "contact-success" && !toastRef.current) {
+      toastRef.current = true;
+      toast.success("Create contact success!");
+
+      navigate("/dashboard", { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   useEffect(() => {
     const fetchContacts = async () => {

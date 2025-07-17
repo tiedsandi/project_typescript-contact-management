@@ -8,6 +8,7 @@ import { getValidToken } from "@/utils/valid-token";
 import { redirect } from "react-router";
 import { updateUser } from "@/lib/api-user";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function FormPassword() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,9 +52,10 @@ export default function FormPassword() {
 
     try {
       await updateUser({ token, password: data.password });
+      toast.success("Update password successfully!");
       reset();
-    } catch (err) {
-      console.error("❌ Failed to update user:", err);
+    } catch {
+      toast.error("Update password failed!");
     } finally {
       setIsSubmitting(false);
     }

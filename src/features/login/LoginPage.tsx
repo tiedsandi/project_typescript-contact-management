@@ -1,7 +1,34 @@
-import { Link } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
+import { useEffect, useRef } from "react";
+
 import LoginForm from "./components/LoginForm";
+import { toast } from "sonner";
 
 export default function UserLogin() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const shownRef = useRef(false);
+
+  // useEffect(() => {
+  //   const msg = searchParams.get("msg");
+  //   if (msg === "register-success") {
+  //     toast.success("You are on set, go login!");
+  //     navigate("/login", { replace: true });
+  //   }
+  // }, [searchParams, navigate]);
+
+  // mengakali agar tidak muncul 2x karena strictMode
+  useEffect(() => {
+    const msg = searchParams.get("msg");
+
+    if (msg === "register-success" && !shownRef.current) {
+      shownRef.current = true;
+      toast.success("You are on set, go login!");
+
+      navigate("/login", { replace: true });
+    }
+  }, [searchParams, navigate]);
+
   return (
     <>
       <div className="animate-fade-in bg-gray-800 bg-opacity-80 p-8 rounded-xl shadow-custom border border-gray-700 backdrop-blur-sm w-full max-w-md">
