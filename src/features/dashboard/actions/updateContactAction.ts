@@ -1,13 +1,14 @@
-import { type ActionFunctionArgs, redirect } from "react-router";
-import { createContact } from "@/lib/api-contact";
+import { redirect, type ActionFunctionArgs } from "react-router";
 import { getValidToken } from "@/utils/valid-token";
+import { updateContact } from "@/lib/api-contact";
 import { contactSchemaFactory } from "../schema";
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData) as Record<string, string>;
 
-  const schema = contactSchemaFactory();
+  const originalEmail = data.original_email ?? "";
+  const schema = contactSchemaFactory(originalEmail);
   const parseResult = await schema.safeParseAsync(data);
 
   if (!parseResult.success) {
@@ -23,14 +24,17 @@ export async function action({ request }: ActionFunctionArgs) {
     const token = getValidToken();
     if (!token) throw new Error("Unauthorized");
 
-    await createContact(token, {
+    const id = params.idContact;
+    if (!id) throw new Error("Invalid contact ID");
+
+    await updateContact(token, Number(id), {
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,
       phone: String(data.phone),
     });
 
-    return redirect("/dashboard?msg=contact-success");
+    return redirect("/dashboard?msg=contact-update-success");
   } catch (error) {
     return {
       formError:

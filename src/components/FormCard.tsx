@@ -1,13 +1,18 @@
 import type { ReactNode } from "react";
 
 type FormCard = {
-  bgIcon: string;
+  bgIcon?: string;
   FormNode: ReactNode;
   icon: ReactNode;
   title: string;
 };
 
-export default function FormCard({ bgIcon, FormNode, icon, title }: FormCard) {
+export default function FormCard({
+  bgIcon = "bg-blue-500",
+  FormNode,
+  icon,
+  title,
+}: FormCard) {
   return (
     <div className="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
       <div className="p-6">

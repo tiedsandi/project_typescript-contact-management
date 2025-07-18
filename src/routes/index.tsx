@@ -1,8 +1,11 @@
 import {
   CreateContactPage,
   DashboardPage,
+  UpdateContactPage,
   createContactAction,
   dashboardLoader,
+  updateContactAction,
+  updateContactLoader,
 } from "@/features/dashboard";
 import { LoginPage, loginAction } from "@/features/login";
 import { ProfilePage, profileLoader } from "@/features/profile";
@@ -54,11 +57,23 @@ const Router = createBrowserRouter([
         HydrateFallback: LoadingScreen,
       },
       {
-        path: "contacts/create",
-        element: <CreateContactPage />,
-        loader: dashboardLoader,
-        action: createContactAction,
-        // HydrateFallback: LoadingScreen,
+        path: "contacts",
+        children: [
+          {
+            path: "create",
+            element: <CreateContactPage />,
+            loader: dashboardLoader,
+            action: createContactAction,
+            HydrateFallback: LoadingScreen,
+          },
+          {
+            path: ":idContact/edit",
+            element: <UpdateContactPage />,
+            loader: updateContactLoader,
+            action: updateContactAction,
+            HydrateFallback: LoadingScreen,
+          },
+        ],
       },
     ],
   },

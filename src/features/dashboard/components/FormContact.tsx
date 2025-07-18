@@ -1,15 +1,23 @@
 import { Form, useActionData, useNavigation } from "react-router";
-
-import Button from "@/components/UI/Button.component";
-import Input from "@/components/UI/Input.component";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { contactSchema, type ContactForm } from "../schema";
 import type z from "zod";
+
+import Input from "@/components/UI/Input.component";
+import Button from "@/components/UI/Button.component";
+import { contactSchemaFactory, type ContactForm } from "../schema";
 import { toast } from "sonner";
 
-export default function FormCreateContact() {
+type FormContactProps = {
+  defaultValues?: Partial<ContactForm>;
+  isEditMode?: boolean;
+};
+
+export default function FormContact({
+  defaultValues,
+  isEditMode = false,
+}: FormContactProps) {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
 
@@ -19,23 +27,25 @@ export default function FormCreateContact() {
     formError?: string;
   };
 
-  useEffect(() => {
-    if (actionData?.formError) {
-      toast.error(actionData.formError);
-    }
-  }, [actionData?.formError]);
+  const schema = useMemo(() => {
+    const email = actionData?.values?.email || defaultValues?.email || "";
+    return contactSchemaFactory(email);
+  }, [actionData?.values?.email, defaultValues?.email]);
 
   const {
     register,
     setError,
     formState: { errors },
-  } = useForm<z.input<typeof contactSchema>>({
-    resolver: zodResolver(contactSchema),
-    defaultValues: actionData?.values,
+  } = useForm<z.input<ReturnType<typeof contactSchemaFactory>>>({
+    resolver: zodResolver(schema),
+    defaultValues: actionData?.values || defaultValues,
     mode: "all",
   });
 
   useEffect(() => {
+    if (actionData?.formError) {
+      toast.error(actionData.formError);
+    }
     if (actionData?.errors) {
       for (const [field, message] of Object.entries(actionData.errors)) {
         setError(field as keyof ContactForm, { message });
@@ -45,6 +55,11 @@ export default function FormCreateContact() {
 
   return (
     <Form method="post">
+      <input
+        type="hidden"
+        name="original_email"
+        value={defaultValues?.email ?? ""}
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Input
           {...register("first_name")}
@@ -91,11 +106,14 @@ export default function FormCreateContact() {
           {isSubmitting ? (
             <>
               <i className="fas fa-spinner fa-spin mr-2" />
-              Creating...
+              {isEditMode ? "Updating..." : "Creating..."}
             </>
           ) : (
             <>
-              <i className="fas fa-plus-circle mr-2" /> Create Contact
+              <i
+                className={`fas fa-${isEditMode ? "edit" : "plus-circle"} mr-2`}
+              />
+              {isEditMode ? "Update Contact" : "Create Contact"}
             </>
           )}
         </Button>

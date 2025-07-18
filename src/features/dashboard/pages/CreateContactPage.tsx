@@ -1,5 +1,5 @@
 import FormCard from "@/components/FormCard";
-import FormCreateContact from "../components/FormCreateContact";
+import FormContact from "../components/FormContact";
 import PageHeader from "../components/PageHeader";
 
 export default function CreateContactPage() {
@@ -17,7 +17,7 @@ export default function CreateContactPage() {
           bgIcon="bg-blue-500"
           icon={<i className="fas fa-user-plus text-white" />}
           title="New Contact Information"
-          FormNode={<FormCreateContact />}
+          FormNode={<FormContact />}
         />
       </div>
     </>
