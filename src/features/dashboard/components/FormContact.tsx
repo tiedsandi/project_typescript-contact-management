@@ -27,6 +27,17 @@ export default function FormContact({
     formError?: string;
   };
 
+  /**
+   * Membuat memo untuk skema validasi form kontak menggunakan nilai email saat ini.
+   * Skema hanya akan dibuat ulang jika nilai email dari `actionData` atau `defaultValues` berubah.
+   * Ini memastikan logika validasi selalu sesuai dengan input email terbaru,
+   * sekaligus menghindari perhitungan ulang yang tidak perlu pada render yang tidak terkait.
+   *
+   * @remarks
+   * Menggunakan `contactSchemaFactory` untuk menghasilkan skema, dengan parameter email yang sudah di-resolve.
+   *
+   * @returns Skema validasi form kontak yang sudah di-memo.
+   */
   const schema = useMemo(() => {
     const email = actionData?.values?.email || defaultValues?.email || "";
     return contactSchemaFactory(email);
