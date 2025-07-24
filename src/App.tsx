@@ -12,9 +12,9 @@ function App() {
 }
 
 // TODO:
-// [ ] delete contact
-//     [ ] create modal confirmation
-// [ ] pagination
+// [x] delete contact
+//     [x] create modal confirmation
+// [x] pagination
 // [ ] detail contact
 // [ ] UI Modal
 // [ ] CRUD Address using modal

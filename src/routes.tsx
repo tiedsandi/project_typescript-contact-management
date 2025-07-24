@@ -7,6 +7,7 @@ import {
   updateContactAction,
   updateContactLoader,
 } from "@/features/dashboard";
+import { DetailsContactPage, DetailsLoader } from "./features/details";
 import { LoginPage, loginAction } from "@/features/login";
 import { ProfilePage, profileLoader } from "@/features/profile";
 import { RegisterPage, registerAction } from "@/features/register";
@@ -71,6 +72,12 @@ const Router = createBrowserRouter([
             element: <UpdateContactPage />,
             loader: updateContactLoader,
             action: updateContactAction,
+            HydrateFallback: LoadingScreen,
+          },
+          {
+            path: ":id",
+            element: <DetailsContactPage />,
+            loader: DetailsLoader,
             HydrateFallback: LoadingScreen,
           },
         ],

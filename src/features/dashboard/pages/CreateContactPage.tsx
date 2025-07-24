@@ -1,6 +1,6 @@
 import FormCard from "@/components/FormCard";
 import FormContact from "../components/FormContact";
-import PageHeader from "../components/PageHeader";
+import PageHeader from "../../../components/PageHeader";
 
 export default function CreateContactPage() {
   return (

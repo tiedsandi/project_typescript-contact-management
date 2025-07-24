@@ -1,7 +1,7 @@
 import type { ContactForm } from "../schema";
 import FormCard from "@/components/FormCard";
 import FormContact from "../components/FormContact";
-import PageHeader from "../components/PageHeader";
+import PageHeader from "../../../components/PageHeader";
 import { useLoaderData } from "react-router";
 
 export default function UpdateContactPage() {
