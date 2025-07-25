@@ -3,13 +3,14 @@ import { deleteContact, searchContacts } from "@/lib/api-contact";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLoaderData, useNavigate, useSearchParams } from "react-router";
 
-import ContactDeleteModal from "../components/ContactDeleteModal";
+import ContactDeleteModal from "../../../components/ContactDeleteModal";
 import ContactListItem from "../components/ContactListItem";
 import CreateContactCard from "../components/CreateContactCard";
 import Filter from "../components/Filter";
 import LoadingScreen from "@/components/LoadingScreen";
 import Pagination from "../components/Pagination";
 import { toast } from "sonner";
+import { useDeleteHandle } from "@/hooks/useDeleteHandle";
 
 export default function DashboardPage() {
   const { token } = useLoaderData() as { token: string };
@@ -19,14 +20,10 @@ export default function DashboardPage() {
     phone: "",
   });
 
-  const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
-
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState<number>(1);
-
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -48,13 +45,25 @@ export default function DashboardPage() {
     }
   }, [token, page, filters]);
 
+  const {
+    itemToDelete: contactToDelete,
+    setItemToDelete: setContactToDelete,
+    isDeleting,
+    confirmDelete: handleDeleteConfirm,
+  } = useDeleteHandle<Contact>({
+    onDelete: async (contact) => {
+      await deleteContact(token, contact.id);
+      toast.success("Contact deleted successfully");
+    },
+    onAfterDelete: fetchContacts,
+  });
+
   useEffect(() => {
     const msg = searchParams.get("msg");
 
     if (msg === "contact-success" && !toastRef.current) {
       toastRef.current = true;
       toast.success("Create contact success!");
-
       navigate("/dashboard", { replace: true });
     }
   }, [searchParams, navigate]);
@@ -62,22 +71,6 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchContacts();
   }, [fetchContacts]);
-
-  const handleDeleteConfirm = async () => {
-    if (!contactToDelete || isDeleting) return;
-    setIsDeleting(true);
-
-    try {
-      await deleteContact(token, contactToDelete.id);
-      toast.success("Contact deleted successfully");
-      await fetchContacts();
-    } catch {
-      toast.error("Failed to delete contact");
-    } finally {
-      setIsDeleting(false);
-      setContactToDelete(null);
-    }
-  };
 
   const handlePageChange = (newPage: number) => {
     if (newPage !== page) {
@@ -88,14 +81,11 @@ export default function DashboardPage() {
 
   const getPages = () => {
     const pages = [];
-
     const start = Math.max(1, page - 2);
     const end = Math.min(totalPage, page + 2);
-
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
-
     return pages;
   };
 
@@ -108,13 +98,11 @@ export default function DashboardPage() {
 
       <Filter filters={filters} setFilters={setFilters} />
 
-      {isLoading && (
+      {isLoading ? (
         <LoadingScreen height="400px" size={48}>
           Loading contacts...
         </LoadingScreen>
-      )}
-
-      {!isLoading && (
+      ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <CreateContactCard />

@@ -23,4 +23,6 @@ function App() {
 //     [ ] Edit
 //     [ ] Delete
 
+// [ ] pisahkan
+
 export default App;

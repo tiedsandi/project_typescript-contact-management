@@ -5,7 +5,10 @@ import PageHeader from "@/components/PageHeader";
 import { useLoaderData } from "react-router";
 
 export default function DetailsContactPage() {
-  const { contact } = useLoaderData() as { contact: Contact };
+  const { contact, token } = useLoaderData() as {
+    contact: Contact;
+    token: string;
+  };
 
   return (
     <>
@@ -19,7 +22,7 @@ export default function DetailsContactPage() {
         <FormCard
           icon={<i className="fas fa-user text-white" />}
           title="Sandi"
-          FormNode={<DetailsContact Contact={contact} />}
+          FormNode={<DetailsContact contact={contact} token={token} />}
         />
       </div>
     </>

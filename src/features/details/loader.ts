@@ -12,5 +12,5 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const response = await getContactDetail(token, Number(id));
   const contact = response.data;
 
-  return { contact };
+  return { contact, token };
 }

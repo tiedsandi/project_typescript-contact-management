@@ -10,7 +10,7 @@ export default function UpdateContactPage() {
   return (
     <>
       <PageHeader
-        backTo="/dashboard"
+        backTo="auto"
         backLabel="Back to Contacts"
         title="Edit Contact"
         iconClass="fas fa-user-edit"

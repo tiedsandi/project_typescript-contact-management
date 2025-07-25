@@ -34,7 +34,11 @@ export async function action({ request, params }: ActionFunctionArgs) {
       phone: String(data.phone),
     });
 
-    return redirect("/dashboard?msg=contact-update-success");
+    const referer = request.headers.get("referer");
+    const redirectTo =
+      new URL(referer || "").pathname + "?msg=contact-update-success";
+
+    return redirect(redirectTo);
   } catch (error) {
     return {
       formError:
