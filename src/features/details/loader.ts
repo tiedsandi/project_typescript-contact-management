@@ -1,3 +1,4 @@
+import { getAddressesByContact } from "@/lib/api-address";
 import { getContactDetail } from "@/lib/api-contact";
 import { getValidToken } from "@/utils/valid-token";
 import { redirect, type LoaderFunctionArgs } from "react-router";
@@ -9,8 +10,11 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const id = params.idContact;
   if (!id) throw new Error("Invalid contact ID");
 
-  const response = await getContactDetail(token, Number(id));
-  const contact = response.data;
+  const resContact = await getContactDetail(token, Number(id));
+  const contact = resContact.data;
 
-  return { contact, token };
+  const resAddress = await getAddressesByContact(Number(id));
+  const addresses = resAddress;
+
+  return { contact, addresses, token };
 }

@@ -1,17 +1,20 @@
+import type { Address, Contact } from "@/types";
 import { useEffect, useRef } from "react";
 import { useLoaderData, useNavigate, useSearchParams } from "react-router";
 
-import type { Contact } from "@/types";
 import DetailsContact from "./components/DetailsContact";
 import FormCard from "@/components/FormCard";
 import PageHeader from "@/components/PageHeader";
 import { toast } from "sonner";
 
 export default function DetailsContactPage() {
-  const { contact, token } = useLoaderData() as {
+  const { contact, addresses, token } = useLoaderData() as {
     contact: Contact;
+    addresses: Address[];
     token: string;
   };
+
+  console.log(addresses);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
