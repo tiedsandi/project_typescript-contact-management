@@ -10,7 +10,7 @@ import clsx from "clsx";
 type InputProps = {
   label?: string;
   icon?: ReactNode;
-  type?: "text" | "number" | "password" | "email";
+  type?: "text" | "number" | "password" | "email" | "tel";
   name?: string;
   disabled?: boolean;
   placeholder?: string;

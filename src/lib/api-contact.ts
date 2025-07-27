@@ -1,14 +1,7 @@
 import { API_BASE_URL, ENDPOINTS } from "./enpoints";
+import type { Contact, ContactsForm } from "@/types";
 
-import type { Contact } from "@/features/dashboard/types";
 import { getValidToken } from "@/utils/valid-token";
-
-type contactsForm = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-};
 
 type SearchContactsParams = {
   page: number;
@@ -34,7 +27,7 @@ function getAuthHeaders(token: string): HeadersInit {
   };
 }
 
-export async function createContact(token: string, params: contactsForm) {
+export async function createContact(token: string, params: ContactsForm) {
   const res = await fetch(`${API_BASE_URL}${ENDPOINTS.contacts}`, {
     method: "POST",
     headers: getAuthHeaders(token),
@@ -90,7 +83,7 @@ export async function getContactDetail(token: string, id: number) {
 export async function updateContact(
   token: string,
   id: number,
-  params: contactsForm
+  params: ContactsForm
 ) {
   const res = await fetch(`${API_BASE_URL}${ENDPOINTS.contacts}/${id}`, {
     method: "PUT",

@@ -1,12 +1,13 @@
-import type { Contact, FilterValues } from "../types";
 import { deleteContact, searchContacts } from "@/lib/api-contact";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLoaderData, useNavigate, useSearchParams } from "react-router";
 
+import type { Contact } from "@/types";
 import ContactDeleteModal from "../../../components/ContactDeleteModal";
 import ContactListItem from "../components/ContactListItem";
 import CreateContactCard from "../components/CreateContactCard";
 import Filter from "../components/Filter";
+import type { FilterValues } from "../types";
 import LoadingScreen from "@/components/LoadingScreen";
 import Pagination from "../components/Pagination";
 import { toast } from "sonner";
@@ -64,6 +65,12 @@ export default function DashboardPage() {
     if (msg === "contact-success" && !toastRef.current) {
       toastRef.current = true;
       toast.success("Create contact success!");
+      navigate("/dashboard", { replace: true });
+    }
+
+    if (msg === "contact-update-success" && !toastRef.current) {
+      toastRef.current = true;
+      toast.success("Update contact success!");
       navigate("/dashboard", { replace: true });
     }
   }, [searchParams, navigate]);

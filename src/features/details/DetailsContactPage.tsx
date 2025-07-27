@@ -1,8 +1,11 @@
-import type { Contact } from "./types";
+import { useEffect, useRef } from "react";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router";
+
+import type { Contact } from "@/types";
 import DetailsContact from "./components/DetailsContact";
 import FormCard from "@/components/FormCard";
 import PageHeader from "@/components/PageHeader";
-import { useLoaderData } from "react-router";
+import { toast } from "sonner";
 
 export default function DetailsContactPage() {
   const { contact, token } = useLoaderData() as {
@@ -10,6 +13,19 @@ export default function DetailsContactPage() {
     token: string;
   };
 
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const toastRef = useRef(false);
+
+  useEffect(() => {
+    const msg = searchParams.get("msg");
+
+    if (msg === "contact-update-success" && !toastRef.current) {
+      toastRef.current = true;
+      toast.success("Update contact success!");
+      navigate(`/dashboard/contacts/${contact.id}`, { replace: true });
+    }
+  }, [searchParams, contact.id, navigate]);
   return (
     <>
       <PageHeader

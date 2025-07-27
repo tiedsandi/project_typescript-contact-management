@@ -1,5 +1,5 @@
 import Button from "@/components/UI/Button.component";
-import type { Contact } from "../features/dashboard/types";
+import type { Contact } from "@/types";
 import Modal from "@/components/UI/Modal.component";
 
 type ContactDeleteModalProps = {

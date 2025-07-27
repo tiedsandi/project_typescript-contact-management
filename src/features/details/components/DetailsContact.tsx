@@ -1,10 +1,20 @@
-import { Link, useNavigate } from "react-router";
+import { Form, useActionData, useNavigate, useNavigation } from "react-router";
 
-import type { Contact } from "../types";
+import type { Contact } from "@/types";
 import ContactDeleteModal from "@/components/ContactDeleteModal";
+import Input from "@/components/UI/Input.component";
+import {
+  contactSchemaFactory,
+  type ContactForm,
+} from "@/features/dashboard/schema";
 import { deleteContact } from "@/lib/api-contact";
 import { toast } from "sonner";
 import { useDeleteHandle } from "@/hooks/useDeleteHandle";
+import { useForm } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type z from "zod";
+import Button from "@/components/UI/Button.component";
 
 type DetailsContactProps = {
   contact: Contact;
@@ -16,6 +26,8 @@ export default function DetailsContact({
   token,
 }: DetailsContactProps) {
   const navigate = useNavigate();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   const { itemToDelete, setItemToDelete, isDeleting, confirmDelete } =
     useDeleteHandle<Contact>({
@@ -28,39 +40,106 @@ export default function DetailsContact({
       },
     });
 
+  const actionData = useActionData() as {
+    errors?: Partial<Record<keyof ContactForm, string>>;
+    values?: Partial<ContactForm>;
+    formError?: string;
+  };
+
+  const schema = useMemo(() => {
+    const email = actionData?.values?.email || contact?.email || "";
+    return contactSchemaFactory(email);
+  }, [actionData?.values?.email, contact?.email]);
+
+  const {
+    register,
+    setError,
+    formState: { errors },
+  } = useForm<z.input<ReturnType<typeof contactSchemaFactory>>>({
+    resolver: zodResolver(schema),
+    defaultValues: actionData?.values || contact,
+    mode: "all",
+  });
+
+  useEffect(() => {
+    if (actionData?.formError) {
+      toast.error(actionData.formError);
+    }
+    if (actionData?.errors) {
+      for (const [field, message] of Object.entries(actionData.errors)) {
+        setError(field as keyof ContactForm, { message });
+      }
+    }
+  }, [actionData, setError]);
+
   return (
     <>
       <div className="space-y-4">
-        <div>
-          <h3 className="text-gray-400 text-sm">Name</h3>
-          <p className="text-white text-xl font-bold">
-            {contact.first_name} {contact.last_name}
-          </p>
-        </div>
-        <div>
-          <h3 className="text-gray-400 text-sm">Email</h3>
-          <p className="text-white">{contact.email}</p>
-        </div>
-        <div>
-          <h3 className="text-gray-400 text-sm">Phone</h3>
-          <p className="text-white">{contact.phone}</p>
-        </div>
-        <div className="flex justify-end gap-4 mt-8">
-          <Link
-            to={`/dashboard/contacts/${contact.id}/edit`}
-            className="px-5 py-2 bg-gradient text-white rounded-lg hover:opacity-90 transition"
-          >
-            <i className="fas fa-pen mr-2" /> Edit
-          </Link>
-          <button
-            onClick={() => setItemToDelete(contact)}
-            disabled={isDeleting}
-            className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition disabled:opacity-50"
-          >
-            <i className="fas fa-trash mr-2" />
-            {isDeleting ? "Deleting..." : "Delete"}
-          </button>
-        </div>
+        <Form method="post">
+          <input type="hidden" name="original_email" value={contact?.email} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input
+              {...register("first_name")}
+              name="first_name"
+              label="First Name"
+              placeholder="Enter first name"
+              icon={<i className="fas fa-user-tag text-gray-500"></i>}
+              error={errors.first_name?.message}
+            />
+            <Input
+              {...register("last_name")}
+              name="last_name"
+              label="Last Name"
+              placeholder="Enter last name"
+              icon={<i className="fas fa-user-tag text-gray-500"></i>}
+              error={errors.last_name?.message}
+            />
+          </div>
+
+          <Input
+            {...register("email")}
+            name="email"
+            label="Email"
+            placeholder="Enter email"
+            icon={<i className="fas fa-envelope text-gray-500"></i>}
+            error={errors.email?.message}
+          />
+
+          <Input
+            {...register("phone")}
+            name="phone"
+            label="Phone"
+            placeholder="Enter phone number"
+            icon={<i className="fas fa-phone text-gray-500"></i>}
+            error={errors.phone?.message}
+            type="number"
+          />
+
+          <div className="flex justify-end space-x-4 mt-6">
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <i className="fas fa-spinner fa-spin mr-2" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <i className={`fas fa-edit mr-2`} />
+                  Update
+                </>
+              )}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setItemToDelete(contact)}
+              disabled={isDeleting}
+              variant="danger"
+            >
+              <i className="fas fa-trash mr-2" />
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </div>
+        </Form>
       </div>
 
       {itemToDelete && (

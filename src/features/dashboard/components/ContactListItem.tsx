@@ -1,5 +1,5 @@
 import Button from "@/components/UI/Button.component";
-import type { Contact } from "../types";
+import type { Contact } from "@/types";
 import ContactCardWrapper from "./ContactCardWrapper";
 import ContactInfoItem from "./ContactInfoItem";
 import { Link } from "react-router";

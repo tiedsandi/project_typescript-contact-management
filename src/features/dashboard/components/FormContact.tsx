@@ -5,9 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
 
 import Input from "@/components/UI/Input.component";
-import Button from "@/components/UI/Button.component";
 import { contactSchemaFactory, type ContactForm } from "../schema";
 import { toast } from "sonner";
+import FormActions from "./FormActions";
 
 type FormContactProps = {
   defaultValues?: Partial<ContactForm>;
@@ -109,26 +109,7 @@ export default function FormContact({
         type="number"
       />
 
-      <div className="flex justify-end space-x-4">
-        <Button to="/dashboard" variant="secondary">
-          <i className="fas fa-times mr-2" /> Cancel
-        </Button>
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <i className="fas fa-spinner fa-spin mr-2" />
-              {isEditMode ? "Updating..." : "Creating..."}
-            </>
-          ) : (
-            <>
-              <i
-                className={`fas fa-${isEditMode ? "edit" : "plus-circle"} mr-2`}
-              />
-              {isEditMode ? "Update Contact" : "Create Contact"}
-            </>
-          )}
-        </Button>
-      </div>
+      <FormActions isEditMode={isEditMode} isSubmitting={isSubmitting} />
     </Form>
   );
 }

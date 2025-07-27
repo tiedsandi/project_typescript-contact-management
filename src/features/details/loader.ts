@@ -6,7 +6,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const token = getValidToken();
   if (!token) throw redirect("/login");
 
-  const id = params.id;
+  const id = params.idContact;
   if (!id) throw new Error("Invalid contact ID");
 
   const response = await getContactDetail(token, Number(id));

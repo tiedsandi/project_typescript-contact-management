@@ -1,7 +1,7 @@
 import { redirect, type ActionFunctionArgs } from "react-router";
 import { getValidToken } from "@/utils/valid-token";
 import { updateContact } from "@/lib/api-contact";
-import { contactSchemaFactory } from "../schema";
+import { contactSchemaFactory } from "../dashboard/schema";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -34,7 +34,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       phone: String(data.phone),
     });
 
-    return redirect("/dashboard?msg=contact-update-success");
+    return redirect(`/dashboard/contacts/${id}?msg=contact-update-success`);
   } catch (error) {
     return {
       formError:
