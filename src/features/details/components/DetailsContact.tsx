@@ -16,6 +16,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
 import Button from "@/components/UI/Button.component";
 
+import { useState } from "react";
+import isEqual from "lodash.isequal";
+
 type DetailsContactProps = {
   contact: Contact;
   token: string;
@@ -28,6 +31,7 @@ export default function DetailsContact({
   const navigate = useNavigate();
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
+  const [isChanged, setIsChanged] = useState(false);
 
   const { itemToDelete, setItemToDelete, isDeleting, confirmDelete } =
     useDeleteHandle<Contact>({
@@ -54,12 +58,33 @@ export default function DetailsContact({
   const {
     register,
     setError,
+    watch,
     formState: { errors },
   } = useForm<z.input<ReturnType<typeof contactSchemaFactory>>>({
     resolver: zodResolver(schema),
     defaultValues: actionData?.values || contact,
     mode: "all",
   });
+
+  const watchedValues = watch();
+
+  useEffect(() => {
+    const currentValues = {
+      first_name: watchedValues.first_name,
+      last_name: watchedValues.last_name,
+      email: watchedValues.email,
+      phone: watchedValues.phone,
+    };
+
+    const initialValues = {
+      first_name: contact.first_name,
+      last_name: contact.last_name,
+      email: contact.email,
+      phone: contact.phone,
+    };
+
+    setIsChanged(!isEqual(currentValues, initialValues));
+  }, [watchedValues, contact]);
 
   useEffect(() => {
     if (actionData?.formError) {
@@ -116,7 +141,7 @@ export default function DetailsContact({
           />
 
           <div className="flex justify-end space-x-4 mt-6">
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting || !isChanged}>
               {isSubmitting ? (
                 <>
                   <i className="fas fa-spinner fa-spin mr-2" />
