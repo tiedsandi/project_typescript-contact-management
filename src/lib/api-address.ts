@@ -1,5 +1,4 @@
-import { API_BASE_URL, ENDPOINTS } from "./enpoints";
-
+import { API_BASE_URL } from "./enpoints";
 import type { AddressForm } from "@/types";
 import { getValidToken } from "@/utils/valid-token";
 
@@ -11,8 +10,9 @@ function getAuthHeaders(): HeadersInit {
   };
 }
 
-export async function createAddress(params: AddressForm) {
-  const res = await fetch(`${API_BASE_URL}${ENDPOINTS.address}`, {
+// ✅ Create Address
+export async function createAddress(contactId: number, params: AddressForm) {
+  const res = await fetch(`${API_BASE_URL}/contact/${contactId}/addresses`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(params),
@@ -24,19 +24,19 @@ export async function createAddress(params: AddressForm) {
   return data;
 }
 
+// ✅ Get All Addresses by Contact
 export async function getAddressesByContact(contactId: number) {
   const res = await fetch(`${API_BASE_URL}/contact/${contactId}/addresses`, {
     headers: getAuthHeaders(),
   });
 
   const data = await res.json();
-  console.log(data);
-
   if (!res.ok) throw new Error(data.message || "Failed to fetch addresses");
 
   return data.data;
 }
 
+// ✅ Get Detail Address
 export async function getAddressDetail(contactId: number, addressId: number) {
   const res = await fetch(
     `${API_BASE_URL}/contact/${contactId}/addresses/${addressId}`,
@@ -52,12 +52,20 @@ export async function getAddressDetail(contactId: number, addressId: number) {
   return data;
 }
 
-export async function updateAddress(id: number, params: AddressForm) {
-  const res = await fetch(`${API_BASE_URL}${ENDPOINTS.address}/${id}`, {
-    method: "PUT",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(params),
-  });
+// ✅ Update Address
+export async function updateAddress(
+  contactId: number,
+  addressId: number,
+  params: AddressForm
+) {
+  const res = await fetch(
+    `${API_BASE_URL}/contact/${contactId}/addresses/${addressId}`,
+    {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(params),
+    }
+  );
 
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Failed to update Address");
@@ -65,11 +73,15 @@ export async function updateAddress(id: number, params: AddressForm) {
   return data;
 }
 
-export async function deleteAddress(id: number) {
-  const res = await fetch(`${API_BASE_URL}${ENDPOINTS.address}/${id}`, {
-    method: "DELETE",
-    headers: getAuthHeaders(),
-  });
+// ✅ Delete Address
+export async function deleteAddress(contactId: number, addressId: number) {
+  const res = await fetch(
+    `${API_BASE_URL}/contact/${contactId}/addresses/${addressId}`,
+    {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    }
+  );
 
   if (!res.ok) {
     const data = await res.json();
